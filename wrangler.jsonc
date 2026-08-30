@@ -3,6 +3,7 @@
   "name": "wyn-website",
   "compatibility_date": "2026-08-28",
   "assets": {
-    "directory": "./"
+    "directory": "./",
+    "not_found_handling": "single-page-application"
   }
 }
