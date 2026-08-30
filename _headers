@@ -1,0 +1,39 @@
+# 홈페이지
+/
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# 고화질 시공사진
+/image/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# JPG 이미지
+/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.jpeg
+  Cache-Control: public, max-age=31536000, immutable
+
+# PNG 이미지
+/*.png
+  Cache-Control: public, max-age=31536000, immutable
+
+# WebP 이미지
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+# GIF
+/*.gif
+  Cache-Control: public, max-age=31536000, immutable
+
+# CSS
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+# JavaScript
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+# 보안
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
