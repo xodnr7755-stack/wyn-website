@@ -1,16 +1,17 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-
   "name": "wyn-website",
-
   "compatibility_date": "2026-08-30",
 
   "assets": {
-    "directory": "./",
-    "not_found_handling": "404-page"
+    "directory": "./"
   },
 
-  "observability": {
-    "enabled": true
-  }
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "remote": true,
+      "destination_address": "taewook7755@naver.com"
+    }
+  ]
 }
