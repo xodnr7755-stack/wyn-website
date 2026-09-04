@@ -3,8 +3,11 @@
   "name": "wyn-website",
   "compatibility_date": "2026-08-30",
 
+  "main": "./worker.js",
+
   "assets": {
-    "directory": "./"
+    "directory": "./",
+    "binding": "ASSETS"
   },
 
   "send_email": [
