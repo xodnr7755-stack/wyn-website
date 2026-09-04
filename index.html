@@ -1732,28 +1732,18 @@
 
     /* ==================================================
        CLOUDFLARE 문의 폼
-
-       현재는 Netlify에서 벗어났기 때문에
-       data-netlify 방식은 제거했습니다.
-
-       실제 견적 문의 접수 기능은
-       Cloudflare Worker를 연결해야 합니다.
-
-       Worker 연결 전까지는 사용자가
-       전화 또는 이메일로 문의할 수 있도록
-       안내합니다.
+       /api/inquiry 로 Worker에 전송
     ================================================== */
 
     const inquiryForm =
       document.getElementById('inquiryForm');
 
-
     if (inquiryForm) {
-
-      inquiryForm.addEventListener('submit', function(e) {
-
+      inquiryForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
+        const submitBtn =
+          document.getElementById('submitBtn');
 
         const name =
           inquiryForm.querySelector('[name="name"]').value.trim();
@@ -1773,55 +1763,52 @@
         const message =
           inquiryForm.querySelector('[name="message"]').value.trim();
 
-
         if (!name || !phone || !message) {
-
-          alert(
-            '성함 / 업체명, 연락처, 문의 내용을 입력해 주세요.'
-          );
-
+          alert('성함 / 업체명, 연락처, 문의 내용을 입력해 주세요.');
           return;
-
         }
 
+        if (submitBtn.disabled) return;
 
-        /*
-          현재 Cloudflare Worker 접수 기능이 연결되지 않았으므로
-          입력 내용을 이메일 문의로 전달합니다.
+        submitBtn.disabled = true;
+        submitBtn.textContent = '전송 중...';
 
-          사용자가 이메일 앱을 사용하는 경우
-          메일 작성 화면이 열립니다.
-        */
+        try {
+          const response = await fetch('/api/inquiry', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              name,
+              phone,
+              email,
+              category,
+              location,
+              message
+            })
+          });
 
-        const subject =
-          encodeURIComponent(
-            `[WYN 견적문의] ${name}`
-          );
+          const result = await response.json();
 
+          if (!response.ok || !result.success) {
+            throw new Error(result.message || '문의 전송에 실패했습니다.');
+          }
 
-        const body =
-          encodeURIComponent(
-`성함 / 업체명: ${name}
+          alert('문의가 정상적으로 접수되었습니다.
+확인 후 빠르게 연락드리겠습니다.');
+          inquiryForm.reset();
 
-연락처: ${phone}
+        } catch (error) {
+          console.error('문의 전송 오류:', error);
+          alert('문의 전송에 실패했습니다.
+잠시 후 다시 시도해 주세요.');
 
-이메일: ${email}
-
-관심 마감 공종: ${category}
-
-현장 위치 및 예상 면적:
-${location}
-
-문의 내용:
-${message}`
-          );
-
-
-        window.location.href =
-          `mailto:taewook7755@naver.com?subject=${subject}&body=${body}`;
-
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = '견적 문의 보내기';
+        }
       });
-
     }
 
   </script>
